@@ -1,5 +1,5 @@
 from mcp.server.fastmcp import FastMCP
-from github.tools import get_github_file_content, get_workflow_runs, search_codebase, get_file_structure, get_commit_history, get_commit_diff
+from tools.github.tools import get_github_file_content, get_workflow_runs, search_codebase, get_file_structure, get_commit_history, get_commit_diff
 
 mcp = FastMCP("GitHubMCP")
 mcp.settings.host = "0.0.0.0"
