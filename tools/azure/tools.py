@@ -24,7 +24,7 @@ def fetch_azure_ad_token(scope: str) -> dict:
         return {"error": "missing_credentials", "error_description": "CLIENT_ID or CLIENT_SECRET or TENANT_ID not set in environment"}
 
     # 2. Token endpoint URL
-    token_url = "https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"
+    token_url = f"https://login.microsoftonline.com/{tenant_id}/oauth2/v2.0/token"
 
     # 3. Build payload
     payload = {
@@ -52,8 +52,6 @@ def fetch_azure_ad_token(scope: str) -> dict:
     # Success: return the full token response (access_token, expires_in, etc.)
     return data
 
-import requests
-
 def run_log_analytics_query(workspace: str, query: str) -> dict:
     """
     Execute a Log Analytics query against a given workspace.
@@ -66,7 +64,7 @@ def run_log_analytics_query(workspace: str, query: str) -> dict:
         On success: parsed JSON response from Log Analytics
         On failure: {"error": "...", "error_description": "..."}
     """
-    token = fetch_azure_ad_token("https://graph.microsoft.com/.default").get("access_token")
+    token = fetch_azure_ad_token("https://api.loganalytics.io/.default").get("access_token")
     url = f"https://api.loganalytics.io/v1/workspaces/{workspace}/query"
     headers = {
         "Authorization": f"Bearer {token}",
