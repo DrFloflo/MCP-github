@@ -30,8 +30,7 @@ A FastAPI-based server that provides a unified interface for interacting with mu
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
-   cd MCP
+   git clone https://github.com/DrFloflo/MCP-github.git
    ```
 
 2. Install dependencies:
@@ -49,6 +48,50 @@ A FastAPI-based server that provides a unified interface for interacting with mu
    AZURE_CLIENT_SECRET=your_client_secret
    AZURE_TENANT_ID=your_tenant_id
    ```
+
+## Create your github token
+
+1. Go to [GitHub Settings](https://github.com/settings/tokens)
+2. Generate a new token with `repo` scope
+3. Copy the token and paste it in the `.env` file
+
+## Create your azure token
+
+### Get your tenant ID
+
+1. Go to [Azure AD](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)
+2. Click on the application you created (create one for the MCP server if you don't have one)
+3. Copy the Directory (tenant) ID and paste it in the `.env` file
+
+### Get your client ID and client secret
+
+1. Go to [Azure AD](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)
+2. Click on the application you created
+3. Copy the Application (client) ID is the client id
+4. Click on "Manage"
+5. Click on "Certificates and secrets"
+6. Click on "New client secret"
+7. Copy the value to Azure client secret and paste it in the `.env` file
+
+### Get your Log Analytics workspace ID
+
+1. Go to your Log Analytics workspace (or create one and bind the logs to it)
+2. Click on the workspace you created
+3. You can find your Workspace ID ask for the tool `run_log_analytics_query`
+
+Warning: You have to configure the Log Analytics workspace to allow the Azure AD Application to access it.
+
+## Add permissions to your Azure AD Application:
+
+1. Go to [Azure AD](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)
+2. Click on the application you created
+3. Click on "Manage"
+4. Click on "API Permissions"
+5. Click on "Add a permission"
+6. Click on "Microsoft Graph"
+7. Click on "Delegated permissions"
+8. Click on "User.Read"
+9. Click on "Add permissions"
 
 ## Usage
 
@@ -89,32 +132,3 @@ The server exposes the following tools as API endpoints:
 
 ### Utility Tools
 - `get_current_utc_timestamp`: Get current UTC timestamp
-
-## Environment Variables
-
-- `GITHUB_TOKEN`: GitHub Personal Access Token with appropriate scopes
-- `AZURE_CLIENT_ID`: Azure AD Application Client ID
-- `AZURE_CLIENT_SECRET`: Azure AD Application Client Secret
-- `AZURE_TENANT_ID`: Azure AD Tenant ID
-
-## Security Considerations
-
-- Never commit your `.env` file or expose your tokens/secrets
-- Use appropriate token scopes (minimum required permissions)
-- Consider using Azure Key Vault or similar for production secret management
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a new Pull Request
-
-## License
-
-[Specify your license here]
-
-## Support
-
-For support, please open an issue in the GitHub repository.
