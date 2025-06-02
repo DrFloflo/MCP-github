@@ -1,3 +1,6 @@
+from logger import SimpleLogger
+logger = SimpleLogger(level="DEBUG")
+
 from mcp.server.fastmcp import FastMCP
 from tools.github.tools import get_github_file_content, get_workflow_runs, search_codebase, get_file_structure, get_commit_history, get_commit_diff
 from tools.utils.tools import get_current_utc_timestamp
