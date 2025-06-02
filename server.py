@@ -8,19 +8,6 @@ mcp.settings.host = "0.0.0.0"
 mcp.settings.port = 6277
 mcp.settings.log_level = "DEBUG"
 
-# Route /health
-@mcp.custom_route("/health", methods=["GET"])
-async def health(request):
-    return JSONResponse({"status": "ok"})
-
-# Route /config
-@mcp.custom_route("/config", methods=["GET"])
-async def config(request):
-    return JSONResponse({
-        "name": "default",  # ← peut être modifié, mais reste cohérent
-        "entrypoint": "GitHubMCP"  # ← DOIT correspondre au nom que tu donnes à FastMCP
-    })
-
 if __name__ == "__main__":
     # Github tool
     mcp.add_tool(get_github_file_content, 
