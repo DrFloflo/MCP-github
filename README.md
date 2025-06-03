@@ -66,6 +66,11 @@ A FastAPI-based server that provides a unified interface for interacting with mu
    AZURE_CLIENT_SECRET=your_client_secret
    AZURE_TENANT_ID=your_tenant_id
 
+   # Azure OpenAI Configuration
+   AZURE_OPENAI_ENDPOINT=your_azure_openai_endpoint
+   AZURE_OPENAI_KEY=your_azure_openai_key
+   AZURE_OPENAI_API_VERSION=your_azure_openai_api_version
+
    # Azure Vision Configuration
    VISION_ENDPOINT=your_vision_endpoint
    VISION_KEY=your_vision_key
@@ -177,3 +182,10 @@ Be carefull, give only SELECT role to the user used to connect to the database.
 
 ### Azure Vision Tools
 - `get_image_analysis`: Get the analysis of an image
+
+### LLM Tools
+- `get_azure_openai_response`: Get a response from Azure OpenAI
+
+### Code Tools
+- `execute_python_code`: Execute Python code
+
