@@ -18,6 +18,18 @@ A FastAPI-based server that provides a unified interface for interacting with mu
 
 ### Utilities
 - **Timestamp Generation**: Get current UTC timestamp with microsecond precision
+- **Website Content**: Get the content of a website in Markdown format
+
+### Database Integration
+- **Database Reading**: Read a database from a PostgreSQL server
+
+### Google Integration
+- **Google Search**: Search Google for a query
+- **YouTube Search**: Search YouTube for a query
+- **YouTube Transcript**: Get the transcript of a YouTube video
+
+### Azure Vision Integration
+- **Image Analysis**: Get the analysis of an image
 
 ## Prerequisites
 
@@ -47,6 +59,18 @@ A FastAPI-based server that provides a unified interface for interacting with mu
    AZURE_CLIENT_ID=your_client_id
    AZURE_CLIENT_SECRET=your_client_secret
    AZURE_TENANT_ID=your_tenant_id
+
+   # Azure Vision Configuration
+   VISION_ENDPOINT=your_vision_endpoint
+   VISION_KEY=your_vision_key
+
+   # Database Configuration
+   POSTGRES_HOST=your_postgres_host
+   POSTGRES_PORT=your_postgres_port
+   POSTGRES_DB=your_postgres_db
+   POSTGRES_USER=your_postgres_user
+   POSTGRES_PASSWORD=your_postgres_password
+   
    ```
 
 ## Create your github token
