@@ -8,6 +8,7 @@ from tools.utils.tools import get_current_utc_timestamp, get_website_content
 from tools.azure.tools import run_log_analytics_query
 from tools.google.search import search_google
 from tools.google.youtube import search_youtube, get_youtube_transcript
+from tools.azure.vision import get_image_analysis
 
 mcp = FastMCP("GitHubMCP")
 mcp.settings.host = "0.0.0.0"
@@ -78,5 +79,13 @@ if __name__ == "__main__":
     mcp.add_tool(get_youtube_transcript, name="get_youtube_transcript", description="Get the transcript of a YouTube video", annotations={
         "video_id": "The ID of the video to get the transcript for"
     })
+
+    # Azure vision tool
+    if (settings.VISION_ENDPOINT is not None and settings.VISION_KEY is not None):
+        mcp.add_tool(get_image_analysis, name="get_image_analysis", description="Get the analysis of an image", annotations={
+            "image_url": "The URL of the image to analyze"
+        })
+    else:
+        logger.warning("VISION_ENDPOINT or VISION_KEY not found in .env, skipping Azure vision tools")
     
     mcp.run(transport="sse")
