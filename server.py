@@ -10,6 +10,7 @@ from tools.google.search import search_google
 from tools.google.youtube import search_youtube, get_youtube_transcript
 from tools.azure.vision import get_image_analysis
 from tools.database.postgre import read_db
+from tools.llm.azure import get_azure_openai_response
 
 mcp = FastMCP("GitHubMCP")
 mcp.settings.host = "0.0.0.0"
@@ -96,5 +97,13 @@ if __name__ == "__main__":
         })
     else:
         logger.warning("POSTGRES_HOST, POSTGRES_DB, POSTGRES_USER or POSTGRES_PASSWORD not found in .env, skipping database tools")
+
+    # LLM tool
+    if (settings.AZURE_OPENAI_ENDPOINT != "" and settings.AZURE_OPENAI_KEY != ""):
+        mcp.add_tool(get_azure_openai_response, name="get_azure_openai_response", description="Get a response from Azure OpenAI", annotations={
+            "message": "The message to send to the model"
+        })
+    else:
+        logger.warning("AZURE_OPENAI_ENDPOINT or AZURE_OPENAI_KEY not found in .env, skipping LLM tools")
     
     mcp.run(transport="sse")

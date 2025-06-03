@@ -9,3 +9,6 @@ html_to_markdown
 
 # Database
 psycopg[binary]>=3.0.0  # Using psycopg3 with binary package
+
+# LLM
+openai

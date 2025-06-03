@@ -16,10 +16,14 @@ class Settings(BaseSettings):
     VISION_KEY: str = os.getenv("VISION_KEY", "")
 
     POSTGRES_HOST: str = os.getenv("POSTGRES_HOST", "")
-    POSTGRES_PORT: int = 5432
+    POSTGRES_PORT: int = os.getenv("POSTGRES_PORT", 5432)
     POSTGRES_DB: str = os.getenv("POSTGRES_DB", "")
     POSTGRES_USER: str = os.getenv("POSTGRES_USER", "")
     POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "")
+
+    AZURE_OPENAI_ENDPOINT: str = os.getenv("AZURE_OPENAI_ENDPOINT", "")
+    AZURE_OPENAI_KEY: str = os.getenv("AZURE_OPENAI_KEY", "")
+    AZURE_OPENAI_API_VERSION: str = os.getenv("AZURE_OPENAI_API_VERSION", "2024-12-01-preview")
 
     # Pydantic v2 config
     model_config = SettingsConfigDict(
