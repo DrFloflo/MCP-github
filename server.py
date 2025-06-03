@@ -5,6 +5,8 @@ from mcp.server.fastmcp import FastMCP
 from tools.github.tools import get_github_file_content, get_workflow_runs, search_codebase, get_file_structure, get_commit_history, get_commit_diff
 from tools.utils.tools import get_current_utc_timestamp
 from tools.azure.tools import run_log_analytics_query
+from tools.google.search import search_google
+from tools.google.youtube import search_youtube, get_youtube_transcript
 
 mcp = FastMCP("GitHubMCP")
 mcp.settings.host = "0.0.0.0"
@@ -50,9 +52,21 @@ if __name__ == "__main__":
     mcp.add_tool(get_current_utc_timestamp, name="get_current_utc_timestamp", description="Get the current UTC time in the format: YYYY-MM-DDTHH:MM:SS.ffffff0Z")
     
     # Azure tool
-    mcp.add_tool(run_log_analytics_query, name="run_log_analytics_query", description="Run a Log Analytics query against a given workspace", annotations={
+    mcp.add_tool(run_log_analytics_query, name="run_log_analytics_query", description="Run a Log Analytics query against a given workspace using API", annotations={
         "workspace": "Log Analytics workspace ID",
-        "query": "KQL query string"
+        "query": "KQL query string (data queries only)"
+    })
+    
+    # Google tool
+    mcp.add_tool(search_google, name="search_google", description="Search Google for a query", annotations={
+        "query": "The query to search for",
+        "num_results": "The number of results to return"
+    })
+    mcp.add_tool(search_youtube, name="search_youtube", description="Search YouTube for a query", annotations={
+        "query": "The query to search for"
+    })
+    mcp.add_tool(get_youtube_transcript, name="get_youtube_transcript", description="Get the transcript of a YouTube video", annotations={
+        "video_id": "The ID of the video to get the transcript for"
     })
     
     mcp.run(transport="sse")

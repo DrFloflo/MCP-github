@@ -1,3 +1,6 @@
 requests
 python-dotenv
 mcp
+youtube-search
+youtube-transcript-api
+googlesearch-python
