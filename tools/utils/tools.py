@@ -1,4 +1,7 @@
 import datetime
+import requests
+from html_to_markdown import convert_to_markdown
+import re
 
 def get_current_utc_timestamp() -> str:
     """
@@ -11,3 +14,24 @@ def get_current_utc_timestamp() -> str:
     return f"{now.year:04d}-{now.month:02d}-{now.day:02d}T" \
            f"{now.hour:02d}:{now.minute:02d}:{now.second:02d}." \
            f"{fraction}Z"
+
+def get_website_content(url: str) -> str:
+    """
+    Get the content of a website in Markdown format.
+
+    Args:
+        url: The URL of the website to get the content for.
+
+    Returns:
+        The content of the website cleaned in markdown.
+    """
+    try:
+        response = requests.get(url)
+        text = response.content.decode("utf-8")
+        markdown_content = convert_to_markdown(text)
+        markdown_content = re.sub(r'\n{2,}', '\n', markdown_content)
+        return markdown_content
+    except Exception as e:
+        return str(e)
+
+print(get_website_content("https://www.edgework.fr"))
