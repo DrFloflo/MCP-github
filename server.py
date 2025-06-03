@@ -1,9 +1,10 @@
-from logger import SimpleLogger
-logger = SimpleLogger(level="DEBUG")
+from core.logger import logger
+
+from core.config import settings
 
 from mcp.server.fastmcp import FastMCP
 from tools.github.tools import get_github_file_content, get_workflow_runs, search_codebase, get_file_structure, get_commit_history, get_commit_diff
-from tools.utils.tools import get_current_utc_timestamp
+from tools.utils.tools import get_current_utc_timestamp, get_website_content
 from tools.azure.tools import run_log_analytics_query
 from tools.google.search import search_google
 from tools.google.youtube import search_youtube, get_youtube_transcript
@@ -15,47 +16,56 @@ mcp.settings.log_level = "DEBUG"
 
 if __name__ == "__main__":
     # Github tool
-    mcp.add_tool(get_github_file_content, 
-    name="get_github_file_folder", 
-    description="Get a file or folder from GitHub, / for root",
-    annotations={
-        "owner": "GitHub user/org",
-        "repo": "Repository name",
-        "path": "File path to scope commits (\"\" for root)"
-    })
-    mcp.add_tool(get_workflow_runs, name="get_workflow_runs", description="Get the latest N workflow runs from a GitHub repo", annotations={
-        "owner": "GitHub user/org",
-        "repo": "Repository name",
-        "last_req": "Number of most recent workflow runs to fetch (max 100)"
-    })
-    mcp.add_tool(search_codebase, name="search_codebase", description="Search for a keyword in a GitHub repository using the Code Search API", annotations={
-        "owner": "GitHub user/org",
-        "repo": "Repository name",
-        "keyword": "Keyword to search for"
-    })
-    mcp.add_tool(get_file_structure, name="get_file_structure", description="Get the full file structure of a GitHub repo", annotations={
-        "owner": "GitHub user/org",
-        "repo": "Repository name"
-    })
-    mcp.add_tool(get_commit_history, name="get_commit_history", description="Get recent commit history (optionally for a specific file)", annotations={
-        "owner": "GitHub user/org",
-        "repo": "Repository name",
-        "path": "File path to scope commits (\"\" for root)"
-    })
-    mcp.add_tool(get_commit_diff, name="get_commit_diff", description="Fetch file-level diffs for a specific commit", annotations={
-        "owner": "GitHub user/org",
-        "repo": "Repository name",
-        "sha": "Commit SHA to inspect"
-    })
+    if (settings.GITHUB_TOKEN is not None):
+        mcp.add_tool(get_github_file_content, 
+        name="get_github_file_folder", 
+        description="Get a file or folder from GitHub, / for root",
+        annotations={
+            "owner": "GitHub user/org",
+            "repo": "Repository name",
+            "path": "File path to scope commits (\"\" for root)"
+        })
+        mcp.add_tool(get_workflow_runs, name="get_workflow_runs", description="Get the latest N workflow runs from a GitHub repo", annotations={
+            "owner": "GitHub user/org",
+            "repo": "Repository name",
+            "last_req": "Number of most recent workflow runs to fetch (max 100)"
+        })
+        mcp.add_tool(search_codebase, name="search_codebase", description="Search for a keyword in a GitHub repository using the Code Search API", annotations={
+            "owner": "GitHub user/org",
+            "repo": "Repository name",
+            "keyword": "Keyword to search for"
+        })
+        mcp.add_tool(get_file_structure, name="get_file_structure", description="Get the full file structure of a GitHub repo", annotations={
+            "owner": "GitHub user/org",
+            "repo": "Repository name"
+        })
+        mcp.add_tool(get_commit_history, name="get_commit_history", description="Get recent commit history (optionally for a specific file)", annotations={
+            "owner": "GitHub user/org",
+            "repo": "Repository name",
+            "path": "File path to scope commits (\"\" for root)"
+        })
+        mcp.add_tool(get_commit_diff, name="get_commit_diff", description="Fetch file-level diffs for a specific commit", annotations={
+            "owner": "GitHub user/org",
+            "repo": "Repository name",
+            "sha": "Commit SHA to inspect"
+        })
+    else:
+        logger.warning("GITHUB_TOKEN not found in .env, skipping GitHub tools")
 
     # Utils tool
     mcp.add_tool(get_current_utc_timestamp, name="get_current_utc_timestamp", description="Get the current UTC time in the format: YYYY-MM-DDTHH:MM:SS.ffffff0Z")
+    mcp.add_tool(get_website_content, name="get_website_content", description="Get the content of a website in Markdown format", annotations={
+        "url": "The URL of the website to get the content for"
+    })
     
     # Azure tool
-    mcp.add_tool(run_log_analytics_query, name="run_log_analytics_query", description="Run a Log Analytics query against a given workspace using API", annotations={
-        "workspace": "Log Analytics workspace ID",
-        "query": "KQL query string (data queries only)"
-    })
+    if (settings.AZURE_CLIENT_ID is not None and settings.AZURE_CLIENT_SECRET is not None and settings.AZURE_TENANT_ID is not None):
+        mcp.add_tool(run_log_analytics_query, name="run_log_analytics_query", description="Run a Log Analytics query against a given workspace using API", annotations={
+            "workspace": "Log Analytics workspace ID",
+            "query": "KQL query string (data queries only)"
+        })
+    else:
+        logger.warning("AZURE_CLIENT_ID, AZURE_CLIENT_SECRET or AZURE_TENANT_ID not found in .env, skipping Azure tools")
     
     # Google tool
     mcp.add_tool(search_google, name="search_google", description="Search Google for a query", annotations={

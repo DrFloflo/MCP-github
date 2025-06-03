@@ -2,6 +2,7 @@ import datetime
 import requests
 from html_to_markdown import convert_to_markdown
 import re
+from core.logger import logger
 
 def get_current_utc_timestamp() -> str:
     """
@@ -32,6 +33,5 @@ def get_website_content(url: str) -> str:
         markdown_content = re.sub(r'\n{2,}', '\n', markdown_content)
         return markdown_content
     except Exception as e:
-        return str(e)
-
-print(get_website_content("https://www.edgework.fr"))
+        logger.error("Unable to connect or parse response, error: ", e)
+        return "Unable to connect or parse response, error: " + str(e)

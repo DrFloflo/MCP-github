@@ -1,16 +1,10 @@
-import os
 import base64
 import requests
-from dotenv import load_dotenv
-
-# Load .env to get GITHUB_TOKEN
-load_dotenv()
-GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
-if not GITHUB_TOKEN:
-    raise RuntimeError("GITHUB_TOKEN not found in .env")
+from core.config import settings
+from core.logger import logger
 
 HEADERS = {
-    "Authorization": f"token {GITHUB_TOKEN}",
+    "Authorization": f"token {settings.GITHUB_TOKEN}",
     "Accept": "application/vnd.github.v3+json",
 }
 
@@ -37,10 +31,12 @@ def get_github_file_content(owner: str, repo: str, path: str = "") -> dict:
     try:
         data = resp.json()
     except ValueError:
+        logger.error("Unable to connect or parse response")
         return {"type": "error", "message": "Invalid JSON response from GitHub"}
 
     if resp.status_code != 200:
         msg = data.get("message", "Failed to fetch content") if isinstance(data, dict) else "GitHub API error"
+        logger.error(msg)
         return {"type": "error", "message": msg}
 
     if isinstance(data, list):
@@ -89,10 +85,13 @@ def get_workflow_runs(owner: str, repo: str, last_req: int = 5) -> dict:
         resp = requests.get(url, headers=HEADERS, params=params)
         data = resp.json()
     except Exception:
+        logger.error("Failed to fetch or parse response from GitHub")
         return {"error": "Failed to fetch or parse response from GitHub"}
 
     if resp.status_code != 200:
-        return {"error": data.get("message", "GitHub API error")}
+        msg = data.get("message", "GitHub API error")
+        logger.error(msg)
+        return {"error": msg}
 
     runs = data.get("workflow_runs", [])[:last_req]
     result = []
@@ -136,10 +135,13 @@ def search_codebase(owner: str, repo: str, keyword: str, limit: int = 10) -> dic
         resp = requests.get(url, headers=HEADERS, params=params)
         data = resp.json()
     except Exception:
+        logger.error("Failed to query GitHub Code Search API")
         return {"error": "Failed to query GitHub Code Search API"}
 
     if resp.status_code != 200:
-        return {"error": data.get("message", "GitHub API error")}
+        msg = data.get("message", "GitHub API error")
+        logger.error(msg)
+        return {"error": msg}
 
     items = data.get("items", [])
     results = []
@@ -173,10 +175,13 @@ def get_file_structure(owner: str, repo: str, branch: str = "main") -> dict:
         resp = requests.get(url, headers=HEADERS)
         data = resp.json()
     except Exception:
+        logger.error("Failed to fetch or parse Git tree")
         return {"error": "Failed to fetch or parse Git tree"}
 
     if resp.status_code != 200:
-        return {"error": data.get("message", "GitHub API error")}
+        msg = data.get("message", "GitHub API error")
+        logger.error(msg)
+        return {"error": msg}
 
     tree = data.get("tree", [])
     return {
@@ -209,10 +214,13 @@ def get_commit_history(owner: str, repo: str, path: str = None, limit: int = 10)
         resp = requests.get(url, headers=HEADERS, params=params)
         data = resp.json()
     except Exception:
+        logger.error("Failed to fetch or parse commit history")
         return {"error": "Failed to fetch or parse commit history"}
 
     if resp.status_code != 200:
-        return {"error": data.get("message", "GitHub API error")}
+        msg = data.get("message", "GitHub API error")
+        logger.error(msg)
+        return {"error": msg}
     return {
         "commits": [
             {
@@ -244,10 +252,13 @@ def get_commit_diff(owner: str, repo: str, sha: str) -> dict:
         resp = requests.get(url, headers=HEADERS)
         data = resp.json()
     except Exception:
+        logger.error("Failed to fetch or parse commit details")
         return {"error": "Failed to fetch or parse commit details"}
 
     if resp.status_code != 200:
-        return {"error": data.get("message", "GitHub API error")}
+        msg = data.get("message", "GitHub API error")
+        logger.error(msg)
+        return {"error": msg}
 
     files = data.get("files", [])
     results = []
