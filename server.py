@@ -9,6 +9,7 @@ from tools.azure.tools import run_log_analytics_query
 from tools.google.search import search_google
 from tools.google.youtube import search_youtube, get_youtube_transcript
 from tools.azure.vision import get_image_analysis
+from tools.database.postgre import read_db
 
 mcp = FastMCP("GitHubMCP")
 mcp.settings.host = "0.0.0.0"
