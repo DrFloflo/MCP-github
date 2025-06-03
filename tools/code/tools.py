@@ -16,19 +16,58 @@ class CodeExecutionError(Exception):
     """Custom exception for code execution errors"""
     pass
 
-def _create_restricted_globals() -> Dict[str, Any]:
-    """Create a restricted globals dictionary with safe builtins"""
+def get_safe_builtins() -> dict:
+    """
+    Get a dictionary of safe built-in functions and modules.
+    
+    Returns:
+        dict: Dictionary containing safe built-ins and modules
+    """
+    # Import builtins safely
+    import builtins
+    
+    # Create a safe environment with specific builtins
     safe_builtins = {
-        '__builtins__': {
-            name: getattr(__builtins__, name) 
-            for name in [
-                'abs', 'all', 'any', 'bool', 'callable', 'chr', 'dict', 'divmod', 
-                'enumerate', 'filter', 'float', 'frozenset', 'int', 'isinstance', 
-                'issubclass', 'iter', 'len', 'list', 'map', 'max', 'min', 'next', 
-                'object', 'ord', 'pow', 'print', 'range', 'repr', 'reversed', 
-                'round', 'set', 'slice', 'sorted', 'str', 'sum', 'tuple', 'zip'
-            ]
-        },
+        # Include specific built-in functions
+        'abs': builtins.abs,
+        'all': builtins.all,
+        'any': builtins.any,
+        'bool': builtins.bool,
+        'callable': builtins.callable,
+        'chr': builtins.chr,
+        'dict': builtins.dict,
+        'divmod': builtins.divmod,
+        'enumerate': builtins.enumerate,
+        'filter': builtins.filter,
+        'float': builtins.float,
+        'frozenset': builtins.frozenset,
+        'int': builtins.int,
+        'isinstance': builtins.isinstance,
+        'issubclass': builtins.issubclass,
+        'iter': builtins.iter,
+        'len': builtins.len,
+        'list': builtins.list,
+        'map': builtins.map,
+        'max': builtins.max,
+        'min': builtins.min,
+        'next': builtins.next,
+        'object': builtins.object,
+        'ord': builtins.ord,
+        'pow': builtins.pow,
+        'print': builtins.print,
+        'range': builtins.range,
+        'repr': builtins.repr,
+        'reversed': builtins.reversed,
+        'round': builtins.round,
+        'set': builtins.set,
+        'slice': builtins.slice,
+        'sorted': builtins.sorted,
+        'str': builtins.str,
+        'sum': builtins.sum,
+        'tuple': builtins.tuple,
+        'zip': builtins.zip,
+        
+        # Include safe modules
         'math': __import__('math'),
         'random': __import__('random'),
         'datetime': __import__('datetime'),
@@ -72,7 +111,7 @@ def execute_python_code(
         }
     
     # Create a restricted globals dictionary
-    restricted_globals = _create_restricted_globals()
+    restricted_globals = get_safe_builtins()
     
     # Create a string buffer to capture stdout and stderr
     stdout_buffer = io.StringIO()

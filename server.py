@@ -101,7 +101,7 @@ if __name__ == "__main__":
 
     # LLM tool
     if (settings.AZURE_OPENAI_ENDPOINT != "" and settings.AZURE_OPENAI_KEY != ""):
-        mcp.add_tool(get_azure_openai_response, name="get_azure_openai_response", description="Get a response from Azure OpenAI", annotations={
+        mcp.add_tool(get_azure_openai_response, name="get_azure_openai_response", description="Request an other LLM", annotations={
             "message": "The message to send to the model"
         })
     else:
