@@ -15,5 +15,7 @@ class Settings(BaseSettings):
     VISION_ENDPOINT: str = os.getenv("VISION_ENDPOINT", "")
     VISION_KEY: str = os.getenv("VISION_KEY", "")
 
+    class Config:
+        extra = 'ignore'  # This will ignore any extra fields that might be present
+
 settings = Settings()
-    
