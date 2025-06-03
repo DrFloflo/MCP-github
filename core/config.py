@@ -1,7 +1,7 @@
 import os
 
 from dotenv import load_dotenv
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 load_dotenv()
 
@@ -15,7 +15,18 @@ class Settings(BaseSettings):
     VISION_ENDPOINT: str = os.getenv("VISION_ENDPOINT", "")
     VISION_KEY: str = os.getenv("VISION_KEY", "")
 
-    class Config:
-        extra = 'ignore'  # This will ignore any extra fields that might be present
+    POSTGRES_HOST: str = os.getenv("POSTGRES_HOST", "")
+    POSTGRES_PORT: int = 5432
+    POSTGRES_DB: str = os.getenv("POSTGRES_DB", "")
+    POSTGRES_USER: str = os.getenv("POSTGRES_USER", "")
+    POSTGRES_PASSWORD: str = os.getenv("POSTGRES_PASSWORD", "")
+
+    # Pydantic v2 config
+    model_config = SettingsConfigDict(
+        extra="ignore",  # Ignore extra fields
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=True,
+    )
 
 settings = Settings()

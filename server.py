@@ -87,5 +87,13 @@ if __name__ == "__main__":
         })
     else:
         logger.warning("VISION_ENDPOINT or VISION_KEY not found in .env, skipping Azure vision tools")
+
+    #Database tool
+    if (settings.POSTGRES_HOST != "" and settings.POSTGRES_DB != "" and settings.POSTGRES_USER != "" and settings.POSTGRES_PASSWORD != ""):
+        mcp.add_tool(read_db, name="read_db", description="Read a database from a PostgreSQL server", annotations={
+            "query": "The query to execute"
+        })
+    else:
+        logger.warning("POSTGRES_HOST, POSTGRES_DB, POSTGRES_USER or POSTGRES_PASSWORD not found in .env, skipping database tools")
     
     mcp.run(transport="sse")

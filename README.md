@@ -132,3 +132,15 @@ The server exposes the following tools as API endpoints:
 
 ### Utility Tools
 - `get_current_utc_timestamp`: Get current UTC timestamp
+
+### Database Tools
+- `read_db`: Read a database from a PostgreSQL server
+Be carefull, give only SELECT role to the user used to connect to the database.
+
+### Google Tools
+- `search_google`: Search Google for a query
+- `search_youtube`: Search YouTube for a query
+- `get_youtube_transcript`: Get the transcript of a YouTube video
+
+### Azure Vision Tools
+- `get_image_analysis`: Get the analysis of an image
