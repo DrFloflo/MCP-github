@@ -11,6 +11,7 @@ from tools.google.youtube import search_youtube, get_youtube_transcript
 from tools.azure.vision import get_image_analysis
 from tools.database.postgre import read_db
 from tools.llm.azure import get_azure_openai_response
+from tools.code.tools import execute_python_code, ALLOWED_MODULES
 
 mcp = FastMCP("GitHubMCP")
 mcp.settings.host = "0.0.0.0"
@@ -105,5 +106,14 @@ if __name__ == "__main__":
         })
     else:
         logger.warning("AZURE_OPENAI_ENDPOINT or AZURE_OPENAI_KEY not found in .env, skipping LLM tools")
-    
+
+    # Code execution tool
+    mcp.add_tool(execute_python_code, 
+    name="execute_python_code", 
+    description="Execute Python code in a restricted environment, import available: " + ", ".join(ALLOWED_MODULES), 
+    annotations={
+        "code": "Python code to execute",
+        "max_output_length": "Maximum length of the output (default: 1000)"
+    })
+
     mcp.run(transport="sse")

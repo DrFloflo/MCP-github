@@ -31,12 +31,18 @@ A FastAPI-based server that provides a unified interface for interacting with mu
 ### Azure Vision Integration
 - **Image Analysis**: Get the analysis of an image
 
+### LLM Integration
+- **Azure OpenAI**: Get a response from Azure OpenAI
+
 ## Prerequisites
 
 - Python 3.8+
 - Docker (optional, for containerized deployment)
 - GitHub Personal Access Token (with `repo` scope)
 - Azure AD Application credentials (for Azure Log Analytics)
+- Azure OpenAI API Key (for Azure OpenAI)
+- PostgreSQL credentials (for Database Integration)
+- Azure Vision API Key (for Azure Vision)
 
 ## Installation
 

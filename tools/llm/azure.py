@@ -2,12 +2,11 @@ from core.logger import logger
 from core.config import settings
 
 from openai import AzureOpenAI
-from azure.core.credentials import AzureKeyCredential
 
 client = AzureOpenAI(
     api_version=settings.AZURE_OPENAI_API_VERSION,
-    endpoint=settings.AZURE_OPENAI_ENDPOINT,
-    credential=AzureKeyCredential(settings.AZURE_OPENAI_KEY)
+    azure_endpoint=settings.AZURE_OPENAI_ENDPOINT,
+    api_key=settings.AZURE_OPENAI_KEY
 )
 
 model = "gpt-4o-mini"
