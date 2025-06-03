@@ -17,7 +17,7 @@ mcp.settings.log_level = "DEBUG"
 
 if __name__ == "__main__":
     # Github tool
-    if (settings.GITHUB_TOKEN is not None):
+    if (settings.GITHUB_TOKEN != ""):
         mcp.add_tool(get_github_file_content, 
         name="get_github_file_folder", 
         description="Get a file or folder from GitHub, / for root",
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     })
     
     # Azure tool
-    if (settings.AZURE_CLIENT_ID is not None and settings.AZURE_CLIENT_SECRET is not None and settings.AZURE_TENANT_ID is not None):
+    if (settings.AZURE_CLIENT_ID != "" and settings.AZURE_CLIENT_SECRET != "" and settings.AZURE_TENANT_ID != ""):
         mcp.add_tool(run_log_analytics_query, name="run_log_analytics_query", description="Run a Log Analytics query against a given workspace using API", annotations={
             "workspace": "Log Analytics workspace ID",
             "query": "KQL query string (data queries only)"
@@ -81,7 +81,7 @@ if __name__ == "__main__":
     })
 
     # Azure vision tool
-    if (settings.VISION_ENDPOINT is not None and settings.VISION_KEY is not None):
+    if (settings.VISION_ENDPOINT != "" and settings.VISION_KEY != ""):
         mcp.add_tool(get_image_analysis, name="get_image_analysis", description="Get the analysis of an image", annotations={
             "image_url": "The URL of the image to analyze"
         })
