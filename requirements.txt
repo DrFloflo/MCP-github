@@ -4,3 +4,5 @@ mcp
 youtube-search
 youtube-transcript-api
 googlesearch-python
+azure-ai-vision
+html_to_markdown
