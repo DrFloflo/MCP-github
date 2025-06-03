@@ -132,9 +132,12 @@ The server exposes the following tools as API endpoints:
 
 ### Utility Tools
 - `get_current_utc_timestamp`: Get current UTC timestamp
+- `get_website_content`: Get the content of a website in Markdown format
 
 ### Database Tools
 - `read_db`: Read a database from a PostgreSQL server
+
+[!WARNING]
 Be carefull, give only SELECT role to the user used to connect to the database.
 
 ### Google Tools
