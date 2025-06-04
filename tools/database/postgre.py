@@ -19,6 +19,9 @@ def connect():
     except Exception as e:
         logger.error(f"Failed to connect to PostgreSQL: {e}")
         return None
+    finally:
+        if conn is not None:
+            conn.close()
 
 def read_db(query):
     """
