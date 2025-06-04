@@ -1,8 +1,10 @@
 # MCP (Model Context Protocol) Server
 
+<img src="docs/logoMCPo.png" alt="drawing" width="600"/>
+
 A MCP server that provides a unified interface for interacting with multiple services, currently supporting GitHub, Azure Log Analytics, Google, Azure OpenAI, Azure Vision, PostgreSQL, and more.
 
-## Features
+## 🔧 Features
 
 ### GitHub Integration
 - **File/Folder Access**: Retrieve files or directory listings from GitHub repositories
@@ -23,6 +25,8 @@ A MCP server that provides a unified interface for interacting with multiple ser
 ### Database Integration
 - **Database Reading**: Read a database from a PostgreSQL server
 
+> ⚠️ Use a DB user with `SELECT`-only privileges
+
 ### Google Integration
 - **Google Search**: Search Google for a query
 - **YouTube Search**: Search YouTube for a query
@@ -34,15 +38,16 @@ A MCP server that provides a unified interface for interacting with multiple ser
 ### LLM Integration
 - **Azure OpenAI**: Get a response from Azure OpenAI
 
-## Prerequisites
+## 📦 Prerequisites
 
 - Python 3.8+
-- Docker (optional, for containerized deployment)
-- GitHub Personal Access Token (with `repo` scope)
-- Azure AD Application credentials (for Azure Log Analytics)
-- Azure OpenAI API Key (for Azure OpenAI)
-- PostgreSQL credentials (for Database Integration)
-- Azure Vision API Key (for Azure Vision)
+- Docker (optional)
+- Tokens & credentials:
+  - GitHub PAT (`repo` scope)
+  - Azure AD App: client ID, secret, tenant ID
+  - Azure OpenAI Key & Endpoint
+  - Azure Vision Key & Endpoint
+  - PostgreSQL credentials
 
 ## Installation
 
@@ -84,49 +89,72 @@ A MCP server that provides a unified interface for interacting with multiple ser
    
    ```
 
-## Create your github token
+## 🔐 Token Setup
 
-1. Go to [GitHub Settings](https://github.com/settings/tokens)
-2. Generate a new token with `repo` scope
-3. Copy the token and paste it in the `.env` file
+### GitHub
 
-## Create your azure token
+1. Go to [GitHub Personal Access Tokens](https://github.com/settings/tokens)
+2. Generate a new token with the `repo` scope
+3. Add this to your `.env` file:
 
-### Get your tenant ID
+### Azure AD (Log Analytics)
 
-1. Go to [Azure AD](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)
-2. Click on the application you created (create one for the MCP server if you don't have one)
-3. Copy the Directory (tenant) ID and paste it in the `.env` file
+1. Register a new app in [Azure Active Directory](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)
+2. Copy the following:
+   - Tenant ID (Directory ID)
+   - Client ID (Application ID)
+   - Create and copy a new client secret (under *Certificates & secrets*)
+3. Add to `.env`:
+   ```env
+   AZURE_TENANT_ID=your_tenant_id
+   AZURE_CLIENT_ID=your_client_id
+   AZURE_CLIENT_SECRET=your_client_secret
+   ```
 
-### Get your client ID and client secret
+### Log Analytics Workspace
 
-1. Go to [Azure AD](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)
-2. Click on the application you created
-3. Copy the Application (client) ID is the client id
-4. Click on "Manage"
-5. Click on "Certificates and secrets"
-6. Click on "New client secret"
-7. Copy the value to Azure client secret and paste it in the `.env` file
+1. Go to your Log Analytics Workspace in Azure
+2. Copy your **Workspace ID**
+3. Ensure your Azure AD Application has access:
+   - Go to your app in Azure AD
+   - Navigate to **API Permissions**
+   - Click **Add a permission**
+   - Choose **Microsoft Graph** > **Delegated permissions**
+   - Select `User.Read` and confirm
 
-### Get your Log Analytics workspace ID
+### Azure OpenAI
 
-1. Go to your Log Analytics workspace (or create one and bind the logs to it)
-2. Click on the workspace you created
-3. You can find your Workspace ID ask for the tool `run_log_analytics_query`
+1. Go to your Azure OpenAI resource (or Foundry)
+2. Copy the endpoint and key
+3. Add this to `.env`:
+   ```env
+   AZURE_OPENAI_ENDPOINT=your_azure_openai_endpoint
+   AZURE_OPENAI_KEY=your_azure_openai_key
+   AZURE_OPENAI_API_VERSION=your_azure_openai_api_version
+   ```
 
-Warning: You have to configure the Log Analytics workspace to allow the Azure AD Application to access it.
+### Azure Vision
 
-## Add permissions to your Azure AD Application:
+1. Go to your Azure Vision resource (or Vision)
+2. Copy the endpoint and key
+3. Add this to `.env`:
+   ```env
+   VISION_ENDPOINT=your_vision_endpoint
+   VISION_KEY=your_vision_key
+   ```
 
-1. Go to [Azure AD](https://portal.azure.com/#view/Microsoft_AAD_RegisteredApps/ApplicationsListBlade)
-2. Click on the application you created
-3. Click on "Manage"
-4. Click on "API Permissions"
-5. Click on "Add a permission"
-6. Click on "Microsoft Graph"
-7. Click on "Delegated permissions"
-8. Click on "User.Read"
-9. Click on "Add permissions"
+### PostgreSQL
+
+1. Go to your PostgreSQL server
+2. Copy the host, port, database, user, and password
+3. Add this to `.env`:
+   ```env
+   POSTGRES_HOST=your_postgres_host
+   POSTGRES_PORT=your_postgres_port
+   POSTGRES_DB=your_postgres_db
+   POSTGRES_USER=your_postgres_user
+   POSTGRES_PASSWORD=your_postgres_password
+   ```
 
 ## Usage
 
@@ -150,42 +178,46 @@ Run the container:
 docker run -p 6277:6277 --env-file .env mcp-server
 ```
 
-## API Endpoints
-
-The server exposes the following tools as API endpoints:
+## 🧰 Available API Tools
 
 ### GitHub Tools
-- `get_github_file_folder`: Get file contents or directory listing
-- `get_workflow_runs`: Get recent workflow runs
-- `search_codebase`: Search for code in a repository
-- `get_file_structure`: Get repository file structure
+
+- `get_github_file_folder`: Get file contents or list directories
+- `get_workflow_runs`: Retrieve recent workflow runs
+- `search_codebase`: Search code across repositories
+- `get_file_structure`: Get complete repository structure
 - `get_commit_history`: View commit history
-- `get_commit_diff`: View file changes in a specific commit
+- `get_commit_diff`: View file-level changes in a commit
 
 ### Azure Tools
-- `run_log_analytics_query`: Execute KQL queries against Log Analytics
 
-### Utility Tools
-- `get_current_utc_timestamp`: Get current UTC timestamp
-- `get_website_content`: Get the content of a website in Markdown format
+- `run_log_analytics_query`: Execute KQL queries against Azure Log Analytics
 
-### Database Tools
-- `read_db`: Read a database from a PostgreSQL server
+### PostgreSQL Tools
 
-[!WARNING]
-Be carefull, give only SELECT role to the user used to connect to the database.
+- `read_db`: Query data from PostgreSQL
+
+> ⚠️ Use a database user with **read-only** (`SELECT`) access
 
 ### Google Tools
-- `search_google`: Search Google for a query
-- `search_youtube`: Search YouTube for a query
-- `get_youtube_transcript`: Get the transcript of a YouTube video
+
+- `search_google`: Search Google for any query
+- `search_youtube`: Search YouTube videos
+- `get_youtube_transcript`: Get transcript from a YouTube video
 
 ### Azure Vision Tools
-- `get_image_analysis`: Get the analysis of an image
 
-### LLM Tools
-- `get_azure_openai_response`: Get a response from Azure OpenAI
+- `get_image_analysis`: Analyze image content using Azure Vision
+
+### Azure OpenAI Tools
+
+- `get_azure_openai_response`: Generate response using Azure OpenAI (LLM)
+
+### Utility Tools
+
+- `get_current_utc_timestamp`: Get the current UTC timestamp
+- `get_website_content`: Fetch and convert website HTML to Markdown
 
 ### Code Tools
-- `execute_python_code`: Execute Python code
 
+- `execute_python_code`: Execute a Python code snippet securely
