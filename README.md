@@ -1,6 +1,6 @@
-# MCP (Multi-Cloud Platform) Server
+# MCP (Model Context Protocol) Server
 
-A FastAPI-based server that provides a unified interface for interacting with multiple cloud services, currently supporting GitHub and Azure Log Analytics.
+A MCP server that provides a unified interface for interacting with multiple services, currently supporting GitHub, Azure Log Analytics, Google, Azure OpenAI, Azure Vision, PostgreSQL, and more.
 
 ## Features
 
